@@ -1,0 +1,34 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: volume-to-sync
+  namespace: utilities
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 19000Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: volume-to-sync
+  namespace: utilities
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 19000Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/sync-volume"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - storage
